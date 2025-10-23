@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "PwJqpQbKcoQcfpbtphOyWBTQyGeDqFmhU7Z65vF6Awk=",
+  "Source": "ApartadoAulasAPI",
+  "BasePath": "_content/ApartadoAulasAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
