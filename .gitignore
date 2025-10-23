@@ -1,0 +1,79 @@
+# Archivos y directorios generados por Visual Studio
+##############################################
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.suo
+*.user
+*.useros
+*.sln.docstates
+*.vsp
+*.pdb
+*.obj
+*.exe
+*.dll
+*.aps
+*.ncb
+*.bsc
+*.sbr
+*.res
+*.cache
+*.com
+*.class
+*.out
+*.log
+*.bak
+*.old
+*.ipch
+
+# Directorios de compilación y pruebas de .NET Core/ASP.NET Core
+###################################################################
+**/[Bb]in/
+**/[Oo]bj/
+**/[Aa]rtifacts/
+**/[Tt]est[Rr]esults/
+**/[Pp]ublish/
+.vs/
+.tmp/
+*.vspscc
+*.vssscc
+*.bak.*
+**/*.vs/
+
+# Paquetes de NuGet y dependencias
+###################################
+[Pp]ackages/
+# Ignorar directorio de paquetes de NuGet en la raíz del repositorio
+!**/[Pp]ackages/**/build/
+!**/[Pp]ackages/**/tools/
+# Ignorar archivos de lock y restore
+project.lock.json
+project.assets.json
+
+# Archivos de configuración y secretos locales
+################################################
+appsettings*.Development.json
+appsettings*.Staging.json
+appsettings*.Production.json
+appsettings.json.bak
+web.config.bak
+web.config.user
+*.pubxml
+*.secrets.json
+
+# Archivos de Bases de Datos
+############################
+*.mdf
+*.ldf
+*.sdf
+
+# Cobertura de código y herramientas de análisis
+##################################################
+coverage.json
+/TestResults/
+
+# Otros
+#######
+# Directorio de Node Modules (si usas frontend en el mismo repo)
+/node_modules/
