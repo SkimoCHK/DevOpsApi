@@ -19,6 +19,11 @@ namespace ApartadoAulasAPI.Services
       
     }
 
+    //public async Task<Product> UpdateProduct(Product product)
+    //{
+
+    //}
+
     public async Task<Product> GetProductById(int id)
     {
       var producto = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
