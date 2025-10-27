@@ -19,7 +19,7 @@ namespace ApartadoAulasAPI
       {
         o.UseNpgsql(connectionString);
       });
-
+      
       builder.Services.AddScoped<IProductService, ProductService>();
 
       builder.Services.AddControllers();
