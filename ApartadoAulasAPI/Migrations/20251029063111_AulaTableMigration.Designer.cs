@@ -3,6 +3,7 @@ using System;
 using ApartadoAulasAPI.PostgreConfiguration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApartadoAulasAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029063111_AulaTableMigration")]
+    partial class AulaTableMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,7 +88,7 @@ namespace ApartadoAulasAPI.Migrations
                     b.ToTable("Edificio");
                 });
 
-            modelBuilder.Entity("ApartadoAulasAPI.Models.HistorialAcciones", b =>
+            modelBuilder.Entity("ApartadoAulasAPI.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,30 +96,16 @@ namespace ApartadoAulasAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Accion")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<string>("Comentario")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("FechaAccion")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("SolicitudId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SolicitudId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("HistorialAcciones");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.Roles", b =>
@@ -147,49 +136,6 @@ namespace ApartadoAulasAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("ApartadoAulasAPI.Models.SolicitudApartado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AulaId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateOnly>("Fecha")
-                        .HasColumnType("date");
-
-                    b.Property<DateTime>("FechaSolicitud")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<TimeOnly>("HoraFin")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<TimeOnly>("HoraInicio")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<string>("Motivo")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AulaId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("SolicitudApartado");
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.TipoAula", b =>
@@ -286,44 +232,6 @@ namespace ApartadoAulasAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Encargado");
-                });
-
-            modelBuilder.Entity("ApartadoAulasAPI.Models.HistorialAcciones", b =>
-                {
-                    b.HasOne("ApartadoAulasAPI.Models.SolicitudApartado", "Solicitud")
-                        .WithMany()
-                        .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ApartadoAulasAPI.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Solicitud");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("ApartadoAulasAPI.Models.SolicitudApartado", b =>
-                {
-                    b.HasOne("ApartadoAulasAPI.Models.Aula", "Aula")
-                        .WithMany()
-                        .HasForeignKey("AulaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ApartadoAulasAPI.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aula");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.Usuario", b =>

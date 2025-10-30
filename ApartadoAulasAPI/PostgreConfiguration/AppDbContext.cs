@@ -19,9 +19,13 @@ namespace ApartadoAulasAPI.PostgreConfiguration
       }
     }
 
-    public DbSet<Product> Products { get; set; }
     public DbSet<Roles> Roles { get; set; }
     public DbSet<Usuario> Usuario{ get; set; }
+    public DbSet<Edificio> Edificio { get; set; }
+    public DbSet<TipoAula> TipoAula { get; set; }
+    public DbSet<Aula> Aula { get; set; }
+    public DbSet<SolicitudApartado> SolicitudApartados { get; set; }
+    public DbSet<HistorialAcciones> HistorialAcciones { get; set; } 
 
 
   }

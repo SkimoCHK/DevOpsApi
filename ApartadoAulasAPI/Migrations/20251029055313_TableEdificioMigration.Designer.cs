@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApartadoAulasAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251027044447_FixUsuariosTable")]
-    partial class FixUsuariosTable
+    [Migration("20251029055313_TableEdificioMigration")]
+    partial class TableEdificioMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,32 @@ namespace ApartadoAulasAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ApartadoAulasAPI.Models.Edificio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EncargadoId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Estatus")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EncargadoId");
+
+                    b.ToTable("Edificio");
+                });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.Product", b =>
                 {
@@ -99,9 +125,6 @@ namespace ApartadoAulasAPI.Migrations
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("IdRol")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -111,25 +134,36 @@ namespace ApartadoAulasAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("rolId")
+                    b.Property<int>("RolId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("rolId");
+                    b.HasIndex("RolId");
 
                     b.ToTable("Usuario");
                 });
 
-            modelBuilder.Entity("ApartadoAulasAPI.Models.Usuario", b =>
+            modelBuilder.Entity("ApartadoAulasAPI.Models.Edificio", b =>
                 {
-                    b.HasOne("ApartadoAulasAPI.Models.Roles", "rol")
+                    b.HasOne("ApartadoAulasAPI.Models.Usuario", "Encargado")
                         .WithMany()
-                        .HasForeignKey("rolId")
+                        .HasForeignKey("EncargadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("rol");
+                    b.Navigation("Encargado");
+                });
+
+            modelBuilder.Entity("ApartadoAulasAPI.Models.Usuario", b =>
+                {
+                    b.HasOne("ApartadoAulasAPI.Models.Roles", "Rol")
+                        .WithMany()
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,13 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApartadoAulasAPI.Models
 {
-  public class Product
+  public class TipoAula
   {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    public string Name { get; set; }
-    public decimal Price { get; set; }
 
+    [Required]
+    public string Nombre {  get; set; }
+
+    [Required]
+    public bool Estatus {  get; set; }
   }
 }

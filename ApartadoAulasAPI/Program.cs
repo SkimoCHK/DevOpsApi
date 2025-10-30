@@ -1,6 +1,8 @@
 
 using ApartadoAulasAPI.Interfaces;
+using ApartadoAulasAPI.Models;
 using ApartadoAulasAPI.PostgreConfiguration;
+using ApartadoAulasAPI.Repositories;
 using ApartadoAulasAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +22,7 @@ namespace ApartadoAulasAPI
         o.UseNpgsql(connectionString);
       });
       
-      builder.Services.AddScoped<IProductService, ProductService>();
+      builder.Services.AddScoped<IRepository<Roles>, RolesRepository>();
 
       builder.Services.AddControllers();
       // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

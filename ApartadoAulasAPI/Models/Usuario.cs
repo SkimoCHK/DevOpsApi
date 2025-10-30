@@ -24,6 +24,8 @@ namespace ApartadoAulasAPI.Models
     [Required]
     public string Password { get; set; }
 
+    public string? RefreshToken { get; set; }
+
     [Required]
     public bool Estatus {  get; set; }
 
