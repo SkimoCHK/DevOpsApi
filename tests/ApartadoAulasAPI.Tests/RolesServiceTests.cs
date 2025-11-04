@@ -39,20 +39,6 @@ namespace ApartadoAulasAPI.Tests
       repoMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
-    //[Fact]
-    //public void Validate_ShouldReturnFalse_WhenNameIsEmpty()
-    //{
-    //  var mockRepo = new Mock<IRepository<Roles>>();
-    //  var mockMapper = new Mock<IMapper>();
-    //  var service = new RolesService(mockRepo.Object, mockMapper.Object);
-
-    //  var dto = new CreateRoleDto { Nombre = "" };
-
-    //  Assert.False(service.Validate(dto)); // ❌ Esto fallará, porque lanza excepción
-    //}
-
-
-
     [Fact]
     public async Task Update_ShouldReturnUpdatedRole_WhenExists()
     {

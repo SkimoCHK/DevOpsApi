@@ -12,7 +12,7 @@
 
         Task<T> Update(TU UpdateRoleDto);
 
-        bool Validate(TI dto);
+        void Validate(TI dto);
 
         bool Validate(TU dto);
     }
