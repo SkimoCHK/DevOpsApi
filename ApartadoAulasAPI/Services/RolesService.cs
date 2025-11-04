@@ -34,7 +34,7 @@ namespace ApartadoAulasAPI.Services
       try
       {
         var role = _mapper.Map<Roles>(roleInsertDto);
-        Validate(roleInsertDto);
+        //Validate(roleInsertDto);
         await _rolesRepository.CreateAsync(role);
         await _rolesRepository.SaveAsync();
         return role;
@@ -71,9 +71,7 @@ namespace ApartadoAulasAPI.Services
         { Clave: null or ""} => new HttpsException(409, "La clave es un campo obligatorio"),
         _ => null
       };
-
       if (exception is not null) throw exception;
-
     }
 
     public bool Validate(UpdateRoleDto dto)
