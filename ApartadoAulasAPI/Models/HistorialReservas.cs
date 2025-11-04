@@ -1,6 +1,6 @@
 ﻿namespace ApartadoAulasAPI.Models
 {
-  public class HistorialReservas
-  {
-  }
+    public class HistorialReservas
+    {
+    }
 }

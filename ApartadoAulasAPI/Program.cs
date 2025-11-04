@@ -11,57 +11,57 @@ using ApartadoAulasAPI.AutoMappers;
 
 namespace ApartadoAulasAPI
 {
-  public class Program
-  {
-    public static void Main(string[] args)
+    public class Program
     {
-      var builder = WebApplication.CreateBuilder(args);
-
-      // Add services to the container.
-      var connectionString = builder.Configuration.GetConnectionString("PostgreConnection");
-      builder.Services.AddDbContext<AppDbContext>(o =>
-      {
-        o.UseNpgsql(connectionString);
-      });
-
-      builder.Services.AddScoped<IRepository<Roles>, RolesRepository>();
-      builder.Services.AddScoped<ICommonService<Roles, CreateRoleDto, UpdateRoleDto>, RolesService>();
-
-      builder.Services.AddControllers();
-      // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-      builder.Services.AddEndpointsApiExplorer();
-      builder.Services.AddSwaggerGen();
-
-      //Configurar CORS (acepta cualquier origen)
-      builder.Services.AddCors(options =>
-      {
-        options.AddPolicy("PermitirTodo", policy =>
+        public static void Main(string[] args)
         {
-          policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-        });
-      });
+            var builder = WebApplication.CreateBuilder(args);
 
-      // Register AutoMapper before building the app
-      builder.Services.AddAutoMapper(typeof(MappingProfile));
-      var app = builder.Build();
+            // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("PostgreConnection");
+            builder.Services.AddDbContext<AppDbContext>(o =>
+            {
+                o.UseNpgsql(connectionString);
+            });
 
-      // Configure the HTTP request pipeline.
-      if (app.Environment.IsDevelopment())
-      {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-      }
+            builder.Services.AddScoped<IRepository<Roles>, RolesRepository>();
+            builder.Services.AddScoped<ICommonService<Roles, CreateRoleDto, UpdateRoleDto>, RolesService>();
 
-      app.UseHttpsRedirection();
-      app.UseCors("PermitirTodo");
-      app.UseAuthorization();
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
-      app.MapControllers();
+            //Configurar CORS (acepta cualquier origen)
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("PermitirTodo", policy =>
+          {
+              policy
+          .AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader();
+          });
+            });
 
-      app.Run();
+            // Register AutoMapper before building the app
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseCors("PermitirTodo");
+            app.UseAuthorization();
+
+            app.MapControllers();
+
+            app.Run();
+        }
     }
-  }
 }

@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApartadoAulasAPI.Controllers
 {
-  [Route("api/[controller]")]
-  [ApiController]
-  public class EdificioController : ControllerBase
-  {
-    [HttpGet]
-    public IActionResult GetEdificios()
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EdificioController : ControllerBase
     {
-      var edificios = new List<Edificio>()
+        [HttpGet]
+        public IActionResult GetEdificios()
+        {
+            var edificios = new List<Edificio>()
       {
         new Edificio
         {
@@ -44,7 +44,7 @@ namespace ApartadoAulasAPI.Controllers
 
 
       };
-      return Ok(edificios);
+            return Ok(edificios);
+        }
     }
-  }
 }

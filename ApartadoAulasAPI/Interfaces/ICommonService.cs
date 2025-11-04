@@ -1,19 +1,19 @@
 ﻿namespace ApartadoAulasAPI.Interfaces
 {
-  public interface ICommonService<T, TI, TU>
-  {
-    public List<string> Errors { get; }
+    public interface ICommonService<T, TI, TU>
+    {
+        public List<string> Errors { get; }
 
-    Task<IEnumerable<T>> Get();
+        Task<IEnumerable<T>> Get();
 
-    Task<T> GetById(int id);
+        Task<T> GetById(int id);
 
-    Task<T> Add(TI CreateRoleDto);
+        Task<T> Add(TI CreateRoleDto);
 
-    Task<T> Update(TU UpdateRoleDto);
+        Task<T> Update(TU UpdateRoleDto);
 
-    bool Validate(TI dto);
+        bool Validate(TI dto);
 
-    bool Validate(TU dto);
-  }
+        bool Validate(TU dto);
+    }
 }

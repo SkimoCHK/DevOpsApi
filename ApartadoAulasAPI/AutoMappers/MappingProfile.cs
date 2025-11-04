@@ -4,14 +4,15 @@ using AutoMapper;
 
 namespace ApartadoAulasAPI.AutoMappers
 {
-  public class MappingProfile : Profile
-  {
-    public MappingProfile(){
-      
-      CreateMap<CreateRoleDto, Roles>();
+    public class MappingProfile : Profile
+    {
+        public MappingProfile()
+        {
 
-      CreateMap<UpdateRoleDto, Roles>();
-    
+            CreateMap<CreateRoleDto, Roles>();
+
+            CreateMap<UpdateRoleDto, Roles>();
+
+        }
     }
-  }
 }
