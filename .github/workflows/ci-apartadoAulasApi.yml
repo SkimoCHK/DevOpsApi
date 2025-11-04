@@ -10,8 +10,11 @@ on:
       - main
 
 jobs:
-  build_test_lint:
-    name: Build, Test & Lint (.NET)
+  # ===============================
+  # JOB 1: BUILD & LINT
+  # ===============================
+  build:
+    name: Build and Lint (.NET)
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +48,32 @@ jobs:
       - name: Build solution
         run: dotnet build --no-restore --configuration Release
 
-      # 6. Pruebas automatizadas (Test)
+  # ===============================
+  # JOB 2: TEST
+  # ===============================
+  test:
+    name: Run Tests (.NET)
+    runs-on: ubuntu-latest
+
+    # Este job depende del éxito del job de compilación.
+    needs: build
+
+    steps:
+      # 1. Clona nuevamente el repositorio (cada job tiene su propio entorno limpio).
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Instala el SDK de .NET (misma versión que en el build).
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # 3. Restaura las dependencias nuevamente.
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 4. Pruebas automatizadas (Test)
       #    Aquí se ejecutan las pruebas unitarias e integrales con 'dotnet test'.
       #    Se genera un archivo de resultados en formato .trx para evidenciar la ejecución.
       #    Esta fase valida la funcionalidad del código antes de integrar cambios a la rama principal.
@@ -55,7 +83,7 @@ jobs:
             --logger "trx;LogFileName=test_results.trx" \
             --results-directory ./TestResults
 
-      # 7. Muestra un pequeño resumen de los resultados de las pruebas en consola.
+      # 5. Muestra un pequeño resumen de los resultados de las pruebas en consola.
       - name: Show test results summary
         if: always()
         run: |
@@ -66,7 +94,7 @@ jobs:
           ls ./TestResults || echo "No se encontraron resultados de prueba."
           echo "---------------------------------------"
 
-      # 8. Carga los resultados de las pruebas como artefacto descargable en GitHub Actions.
+      # 6. Carga los resultados de las pruebas como artefacto descargable en GitHub Actions.
       #    Esto permite conservar evidencia de las ejecuciones para la entrega académica o auditoría.
       - name: Upload test results
         if: always()
