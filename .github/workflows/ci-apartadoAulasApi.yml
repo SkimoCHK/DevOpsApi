@@ -22,29 +22,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Instala la versión especificada del SDK de .NET (8.0 en este caso)
-      #    para poder compilar y ejecutar el proyecto.
+      # 2. Instala el SDK de .NET (9.0 en este caso)
+      #    para compilar y ejecutar el proyecto con la versión correcta.
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
 
       # 3. Restaura las dependencias necesarias definidas en los archivos .csproj.
       - name: Restore dependencies
         run: dotnet restore
 
       # 4. Análisis estático de código (Linter)
-      #    Se utiliza la herramienta dotnet format para verificar el estilo y formato del código.
-      #    Esto ayuda a mantener buenas prácticas de codificación y consistencia en el equipo.
+      #    Se utiliza dotnet format para verificar el estilo del código.
       - name: Code analysis (dotnet format)
         run: |
           dotnet tool install -g dotnet-format
           export PATH="$PATH:/home/runner/.dotnet/tools"
-          dotnet format --verify-no-changes || echo "Se encontraron advertencias de formato, no se detiene el pipeline."
+          dotnet format --verify-no-changes || echo "Advertencias de formato detectadas."
 
       # 5. Compilación (Build)
-      #    En esta etapa se compila la solución usando el comando 'dotnet build'.
-      #    Este proceso garantiza que el código fuente no contenga errores de sintaxis o dependencias rotas.
+      #    Se compila la solución garantizando que no existan errores de sintaxis o dependencias rotas.
       - name: Build solution
         run: dotnet build --no-restore --configuration Release
 
@@ -59,31 +57,25 @@ jobs:
     needs: build
 
     steps:
-      # 1. Clona nuevamente el repositorio (cada job tiene su propio entorno limpio).
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Instala el SDK de .NET (misma versión que en el build).
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
 
-      # 3. Restaura las dependencias nuevamente.
       - name: Restore dependencies
         run: dotnet restore
 
-      # 4. Pruebas automatizadas (Test)
-      #    Aquí se ejecutan las pruebas unitarias e integrales con 'dotnet test'.
-      #    Se genera un archivo de resultados en formato .trx para evidenciar la ejecución.
-      #    Esta fase valida la funcionalidad del código antes de integrar cambios a la rama principal.
+      # Pruebas automatizadas
+      # Aquí se ejecutan las pruebas unitarias e integrales para validar la calidad del código.
       - name: Run tests
         run: |
-          dotnet test --no-build --verbosity normal --configuration Release \
+          dotnet test --verbosity normal --configuration Release \
             --logger "trx;LogFileName=test_results.trx" \
             --results-directory ./TestResults
 
-      # 5. Muestra un pequeño resumen de los resultados de las pruebas en consola.
       - name: Show test results summary
         if: always()
         run: |
@@ -94,8 +86,6 @@ jobs:
           ls ./TestResults || echo "No se encontraron resultados de prueba."
           echo "---------------------------------------"
 
-      # 6. Carga los resultados de las pruebas como artefacto descargable en GitHub Actions.
-      #    Esto permite conservar evidencia de las ejecuciones para la entrega académica o auditoría.
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
