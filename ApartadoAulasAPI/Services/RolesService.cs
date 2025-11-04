@@ -34,7 +34,7 @@ namespace ApartadoAulasAPI.Services
       try
       {
         var role = _mapper.Map<Roles>(roleInsertDto);
-        //Validate(roleInsertDto);
+        Validate(roleInsertDto);
         await _rolesRepository.CreateAsync(role);
         await _rolesRepository.SaveAsync();
         return role;

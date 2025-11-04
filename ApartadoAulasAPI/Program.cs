@@ -33,12 +33,12 @@ namespace ApartadoAulasAPI
       builder.Services.AddScoped<IRepository<Roles>, RolesRepository>();
       builder.Services.AddScoped<ICommonService<Roles, CreateRoleDto, UpdateRoleDto>, RolesService>();
 
-      //builder.Services.AddControllers();
+      builder.Services.AddControllers();
 
-      builder.Services.AddControllers()
-        .AddFluentValidation();
+      //builder.Services.AddControllers()
+      //  .AddFluentValidation();
 
-      builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+      //builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
       // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
       builder.Services.AddEndpointsApiExplorer();
