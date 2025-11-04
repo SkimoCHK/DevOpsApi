@@ -8,9 +8,9 @@
 
     Task<T> GetById(int id);
 
-    Task<T> Add(TI beerDTO);
+    Task<T> Add(TI CreateRoleDto);
 
-    Task<T> Update(int id, TU beerDTO);
+    Task<T> Update(TU UpdateRoleDto);
 
     bool Validate(TI dto);
 

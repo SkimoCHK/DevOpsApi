@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApartadoAulasAPI.Models
 {
+  [Index(nameof(Clave), nameof(Nombre), IsUnique = true)]
   public class Roles
   {
     [Key]

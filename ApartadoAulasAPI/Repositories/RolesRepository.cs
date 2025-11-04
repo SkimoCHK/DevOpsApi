@@ -1,4 +1,5 @@
-﻿using ApartadoAulasAPI.Interfaces;
+﻿using ApartadoAulasAPI.DTOs.Roles;
+using ApartadoAulasAPI.Interfaces;
 using ApartadoAulasAPI.Models;
 using ApartadoAulasAPI.PostgreConfiguration;
 using Microsoft.EntityFrameworkCore;
@@ -9,27 +10,26 @@ namespace ApartadoAulasAPI.Repositories
   {
     private readonly AppDbContext _context;
 
-    public Task<Roles> CreateAsync(Roles entity)
-    {
-      throw new NotImplementedException();
-    }
+    public RolesRepository(AppDbContext context) => _context = context;
 
     public async Task<IEnumerable<Roles>> GetAllAsync()
-        => await _context.Roles.AsNoTracking().ToListAsync();
+      => await _context.Roles.AsNoTracking().ToListAsync();
 
-    public Task<Roles> GetByIdAsync(int id)
+    public async Task<Roles> GetByIdAsync(int id)
+      => await _context.Roles.FirstOrDefaultAsync(r => r.Id == id);
+
+    public async Task CreateAsync(Roles entity)
+      => _context.Roles.Add(entity);
+
+    public void UpdateAsync(Roles entity)
     {
-      throw new NotImplementedException();
+      _context.Roles.Attach(entity);
+      _context.Entry(entity).State = EntityState.Modified;
     }
 
-    public Task<Roles> SearchElementsAsync(Func<Roles, bool> filter)
-    {
-      throw new NotImplementedException();
-    }
-
-    public Task<Roles> UpdateAsync(Roles entity)
-    {
-      throw new NotImplementedException();
-    }
+    public IEnumerable<Roles> SearchElementsAsync(Func<Roles, bool> filter)
+      => _context.Roles.Where(filter);
+    public async Task SaveAsync()
+      => await _context.SaveChangesAsync();
   }
 }

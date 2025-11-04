@@ -1,12 +1,13 @@
 ﻿namespace ApartadoAulasAPI.Interfaces
 {
-  public interface IRepository<TEntity>
+  public interface IRepository<TEntity> where TEntity : class
   {
     Task<IEnumerable<TEntity>> GetAllAsync();
     Task<TEntity> GetByIdAsync(int id);
-    Task<TEntity> SearchElementsAsync(Func<TEntity, bool> filter);
-    Task<TEntity> CreateAsync(TEntity entity);
-    Task<TEntity> UpdateAsync(TEntity entity);
+    Task CreateAsync(TEntity entity);
+    void UpdateAsync(TEntity entity);
+    IEnumerable<TEntity> SearchElementsAsync(Func<TEntity, bool> filter);
+    Task SaveAsync();
 
   }
 }
