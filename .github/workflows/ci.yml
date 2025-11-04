@@ -1,0 +1,76 @@
+name: CI - ApartadoAulasAPI
+
+# El pipeline se ejecuta automáticamente cuando se hace push o pull request a la rama main.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_test_lint:
+    name: Build, Test & Lint (.NET)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clona el repositorio desde GitHub para tener acceso al código fuente.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Instala la versión especificada del SDK de .NET (8.0 en este caso)
+      #    para poder compilar y ejecutar el proyecto.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # 3. Restaura las dependencias necesarias definidas en los archivos .csproj.
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 4. Análisis estático de código (Linter)
+      #    Se utiliza la herramienta dotnet format para verificar el estilo y formato del código.
+      #    Esto ayuda a mantener buenas prácticas de codificación y consistencia en el equipo.
+      - name: Code analysis (dotnet format)
+        run: |
+          dotnet tool install -g dotnet-format
+          export PATH="$PATH:/home/runner/.dotnet/tools"
+          dotnet format --verify-no-changes || echo "Se encontraron advertencias de formato, no se detiene el pipeline."
+
+      # 5. Compilación (Build)
+      #    En esta etapa se compila la solución usando el comando 'dotnet build'.
+      #    Este proceso garantiza que el código fuente no contenga errores de sintaxis o dependencias rotas.
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      # 6. Pruebas automatizadas (Test)
+      #    Aquí se ejecutan las pruebas unitarias e integrales con 'dotnet test'.
+      #    Se genera un archivo de resultados en formato .trx para evidenciar la ejecución.
+      #    Esta fase valida la funcionalidad del código antes de integrar cambios a la rama principal.
+      - name: Run tests
+        run: |
+          dotnet test --no-build --verbosity normal --configuration Release \
+            --logger "trx;LogFileName=test_results.trx" \
+            --results-directory ./TestResults
+
+      # 7. Muestra un pequeño resumen de los resultados de las pruebas en consola.
+      - name: Show test results summary
+        if: always()
+        run: |
+          echo "---------------------------------------"
+          echo "RESUMEN DE RESULTADOS DE PRUEBAS"
+          echo "---------------------------------------"
+          dotnet test --list-tests | wc -l | xargs echo "Total de pruebas detectadas:"
+          ls ./TestResults || echo "No se encontraron resultados de prueba."
+          echo "---------------------------------------"
+
+      # 8. Carga los resultados de las pruebas como artefacto descargable en GitHub Actions.
+      #    Esto permite conservar evidencia de las ejecuciones para la entrega académica o auditoría.
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults
+          path: ./TestResults
