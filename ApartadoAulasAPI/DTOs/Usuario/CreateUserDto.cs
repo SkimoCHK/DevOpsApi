@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ApartadoAulasAPI.Models
+namespace ApartadoAulasAPI.DTOs.Usuario
 {
-  public class Usuario
+  public class CreateUserDto
   {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
 
     [Required]
     [MaxLength(100)]
@@ -24,18 +21,29 @@ namespace ApartadoAulasAPI.Models
     [Required]
     public string Password { get; set; }
 
-    public string? RefreshToken { get; set; }
 
     [Required]
     public bool Estatus { get; set; }
 
     [Required]
-    public DateTime FechaRegistro { get; set; }
+    public DateTime FechaRegistro {
+      get 
+      { 
+        return FechaRegistro; 
+      } 
+      set
+      {
+        if(value > DateTime.Now)
+        {
+          value = DateTime.Now;
+        }
+        this.FechaRegistro = value;
+      } 
+    
+    }
 
     [Required]
     public int RolId { get; set; }
-
-    public Roles Rol { get; set; }
 
   }
 }

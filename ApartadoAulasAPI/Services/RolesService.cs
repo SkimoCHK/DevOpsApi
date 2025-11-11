@@ -31,22 +31,11 @@ namespace ApartadoAulasAPI.Services
 
     public async Task<Roles> Add(CreateRoleDto roleInsertDto)
     {
-      try
-      {
+  
         var role = _mapper.Map<Roles>(roleInsertDto);
-        //Validate(roleInsertDto);
         await _rolesRepository.CreateAsync(role);
         await _rolesRepository.SaveAsync();
         return role;
-      }
-      catch (HttpsException ex)
-      {
-        throw ex;
-      }
-      catch (Exception ex){
-        throw new HttpsException();
-      }
-
     }
 
     public async Task<Roles> Update(UpdateRoleDto roleUpdateDto)
@@ -63,15 +52,7 @@ namespace ApartadoAulasAPI.Services
 
     public void Validate(CreateRoleDto dto)
     {
-      var exception = dto switch
-      {
-        null => new HttpsException(409, "Petición inválida"),
-        { Nombre: null or "", Clave: null or ""} => new HttpsException(409, "Nombre y clave son campos obligatorios"),
-        { Nombre: null or ""} => new HttpsException(409, "El nombre es un campo obligatorio"),
-        { Clave: null or ""} => new HttpsException(409, "La clave es un campo obligatorio"),
-        _ => null
-      };
-      if (exception is not null) throw exception;
+      throw new NotImplementedException();
     }
 
     public bool Validate(UpdateRoleDto dto)
