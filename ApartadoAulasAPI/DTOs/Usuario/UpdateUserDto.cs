@@ -2,8 +2,10 @@
 
 namespace ApartadoAulasAPI.DTOs.Usuario
 {
-  public class CreateUserDto
+  public class UpdateUserDto
   {
+    [Required]
+    public int Id { get; set; }
 
     [Required]
     [MaxLength(100)]
@@ -28,30 +30,11 @@ namespace ApartadoAulasAPI.DTOs.Usuario
     [Compare("Password", ErrorMessage = "Las contraseñas no coinciden.")]
     public string ConfirmPassword { get; set; }
 
+
     [Required]
     public bool Estatus { get; set; }
 
-    private DateTime _fechaRegistro;
-
-    [Required]
-    public DateTime FechaRegistro {
-      get 
-      { 
-        return _fechaRegistro; 
-      } 
-      set
-      {
-        if(value > DateTime.Now)
-        {
-          value = DateTime.Now.ToUniversalTime();
-        }
-        _fechaRegistro = value;
-      } 
-    
-    }
-
     [Required]
     public int RolId { get; set; }
-
   }
 }

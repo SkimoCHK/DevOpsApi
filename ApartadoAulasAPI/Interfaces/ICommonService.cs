@@ -8,12 +8,12 @@
 
         Task<T> GetById(int id);
 
-        Task<T> Add(TI CreateRoleDto);
+        Task<T> Add(TI CreateEntityDto);
 
-        Task<T> Update(TU UpdateRoleDto);
+        Task<T> Update(TU UpdateEntityDto);
 
         void Validate(TI dto);
 
-        bool Validate(TU dto);
+        void Validate(TU dto);
     }
 }

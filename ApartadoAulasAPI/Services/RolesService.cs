@@ -50,12 +50,14 @@ namespace ApartadoAulasAPI.Services
       return role;
     }
 
+    //En construccion
     public void Validate(CreateRoleDto dto)
     {
-      throw new NotImplementedException();
+      var element = _rolesRepository.SearchElementsAsync(r => r.Nombre == dto.Nombre || r.Clave == dto.Clave).FirstOrDefault();
+      throw new HttpsException(409, $"{(dto.Nombre == element.Nombre ? "Ese nombre ya está en uso" : "") }");
     }
 
-    public bool Validate(UpdateRoleDto dto)
+    public void Validate(UpdateRoleDto dto)
     {
       throw new NotImplementedException();
     }

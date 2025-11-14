@@ -13,7 +13,7 @@ namespace ApartadoAulasAPI.Tests
   {
     private IMapper BuildMapper()
     {
-      var config = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
+      var config = new MapperConfiguration(cfg => cfg.AddProfile(new RolesProfile()));
       return config.CreateMapper();
     }
 

@@ -1,14 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ApartadoAulasAPI.Models
+namespace ApartadoAulasAPI.DTOs.Edificio
 {
-  [Index(nameof(Nombre), IsUnique =true)]
-  public class Edificio
+  public class UpdateEdificioDto
   {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Required]
     public int Id { get; set; }
 
     [Required]
@@ -20,8 +17,5 @@ namespace ApartadoAulasAPI.Models
 
     [ForeignKey("Encargado")]
     public int EncargadoId { get; set; }
-
-    public Usuario Encargado { get; set; }
-
   }
 }
