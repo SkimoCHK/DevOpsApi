@@ -20,19 +20,10 @@ namespace ApartadoAulasAPI.Controllers
     [HttpGet("GetError")]
     public IActionResult Test()
     {
-      try
-      {
-        throw new HttpsException(409, "Error xd");
-      }
-      catch (HttpsException ex)
-      {
-        var errorResponse = new
-        {
-          StatusCode = ex.ErrorCode,
-          Message = ex.Message
-        };
-        return Conflict(errorResponse);
-      }
+
+      throw new Exception("Error de prueba");
+
+
     }
 
     [HttpGet]

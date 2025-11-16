@@ -9,6 +9,15 @@
     }
   },
   "profiles": {
+    "ApartadoAulasAPI": { // <--- Este es el perfil para Kestrel
+      "commandName": "Project", // <--- CLAVE: Esto lanza el proceso en una ventana de consola
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7001;http://localhost:5001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,

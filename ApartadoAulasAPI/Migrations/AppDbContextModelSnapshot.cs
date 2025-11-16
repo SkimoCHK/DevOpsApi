@@ -56,7 +56,7 @@ namespace ApartadoAulasAPI.Migrations
 
                     b.HasIndex("TipoAulaId");
 
-                    b.ToTable("Aula");
+                    b.ToTable("Aula", (string)null);
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.Edificio", b =>
@@ -85,7 +85,7 @@ namespace ApartadoAulasAPI.Migrations
                     b.HasIndex("Nombre")
                         .IsUnique();
 
-                    b.ToTable("Edificio");
+                    b.ToTable("Edificio", (string)null);
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.HistorialAcciones", b =>
@@ -119,7 +119,7 @@ namespace ApartadoAulasAPI.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("HistorialAcciones");
+                    b.ToTable("HistorialAcciones", (string)null);
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.Roles", b =>
@@ -152,7 +152,7 @@ namespace ApartadoAulasAPI.Migrations
                     b.HasIndex("Clave", "Nombre")
                         .IsUnique();
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.SolicitudApartado", b =>
@@ -195,7 +195,7 @@ namespace ApartadoAulasAPI.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("SolicitudApartado");
+                    b.ToTable("SolicitudApartado", (string)null);
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.TipoAula", b =>
@@ -215,7 +215,7 @@ namespace ApartadoAulasAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TipoAula");
+                    b.ToTable("TipoAula", (string)null);
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.Usuario", b =>
@@ -264,7 +264,7 @@ namespace ApartadoAulasAPI.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Usuario");
+                    b.ToTable("Usuario", (string)null);
                 });
 
             modelBuilder.Entity("ApartadoAulasAPI.Models.Aula", b =>

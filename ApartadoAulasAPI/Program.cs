@@ -3,6 +3,7 @@ using ApartadoAulasAPI.DTOs.Edificio;
 using ApartadoAulasAPI.DTOs.Roles;
 using ApartadoAulasAPI.DTOs.Usuario;
 using ApartadoAulasAPI.Interfaces;
+using ApartadoAulasAPI.Middlewares;
 using ApartadoAulasAPI.Models;
 using ApartadoAulasAPI.PostgreConfiguration;
 using ApartadoAulasAPI.Repositories;
@@ -74,6 +75,14 @@ namespace ApartadoAulasAPI
         app.UseSwaggerUI();
       }
 
+      app.UseMiddleware<ExceptionHandlingMiddleware>();
+      //Test middleware in program
+      app.Use(async (context, next) =>
+      {
+        Console.WriteLine("Incio del M2");
+        await next(context);
+        Console.WriteLine("Fin del M2");
+      });
       app.UseHttpsRedirection();
       app.UseCors("PermitirTodo");
       app.UseAuthorization();

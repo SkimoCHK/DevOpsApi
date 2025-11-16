@@ -26,35 +26,14 @@ namespace ApartadoAulasAPI.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateEdficio([FromBody] CreateEdificioDto edificio)
     {
-      try
-      {
-        var newEdificio = await _service.Add(edificio);
-        return Created(nameof(CreateEdficio), newEdificio);
-      }
-      catch (HttpsException ex)
-      {
-        return Conflict(new { ex.ErrorCode, ex.Message });
-      }
-      catch (Exception ex)
-      {
-        return Conflict(new { ErrorCode = 400, Message = "Ocurrió un error inesperado" });
-      }
+      var newEdificio = await _service.Add(edificio);
+      return Created(nameof(CreateEdficio), newEdificio);
     }
     [HttpPut]
     public async Task<IActionResult> UpdateEdificio([FromBody] UpdateEdificioDto edificio)
     {
-      try
-      {
-        var updatedEdificio = await _service.Update(edificio);
-        return Ok(updatedEdificio);
-      }
-      catch (HttpsException ex)
-      {
-        return Conflict(new { ex.ErrorCode, ex.Message });
-      }
-      catch (Exception ex) {
-        return BadRequest(new { ErrorCode = 400, Message = "Ocurrió un error inesperado"});
-      }
+      var updatedEdificio = await _service.Update(edificio);
+      return Ok(updatedEdificio);
     }
   }
 }

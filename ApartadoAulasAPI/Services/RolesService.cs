@@ -31,15 +31,16 @@ namespace ApartadoAulasAPI.Services
 
     public async Task<Roles> Add(CreateRoleDto roleInsertDto)
     {
-  
-        var role = _mapper.Map<Roles>(roleInsertDto);
-        await _rolesRepository.CreateAsync(role);
-        await _rolesRepository.SaveAsync();
-        return role;
+      Validate(roleInsertDto);
+      var role = _mapper.Map<Roles>(roleInsertDto);
+      await _rolesRepository.CreateAsync(role);
+      await _rolesRepository.SaveAsync();
+      return role;
     }
 
     public async Task<Roles> Update(UpdateRoleDto roleUpdateDto)
     {
+      Validate(roleUpdateDto);
       var role = await _rolesRepository.GetByIdAsync(roleUpdateDto.Id);
       if (role == null) return null;
 
@@ -54,13 +55,29 @@ namespace ApartadoAulasAPI.Services
     public void Validate(CreateRoleDto dto)
     {
       var element = _rolesRepository.SearchElementsAsync(r => r.Nombre == dto.Nombre || r.Clave == dto.Clave).FirstOrDefault();
-      throw new HttpsException(409, $"{(dto.Nombre == element.Nombre ? "Ese nombre ya está en uso" : "") }");
+      if (element == null) return;
+
+      string message = "";
+      if (dto.Nombre == element.Nombre && dto.Clave == element.Clave) message = "El nombre y clave ya están en uso";
+      else if (dto.Nombre == element.Nombre) message = $"El nombre '{dto.Nombre}' ya está en uso,";
+      else if (dto.Clave == element.Clave) message = $"La clave '{dto.Clave}' ya está en uso.";
+      throw new HttpException(409, message);
+
     }
 
     public void Validate(UpdateRoleDto dto)
     {
-      throw new NotImplementedException();
-    }
+      var element = _rolesRepository.SearchElementsAsync(r => (r.Nombre == dto.Nombre || r.Clave == dto.Clave) && (dto.Id != r.Id)).FirstOrDefault();
+      if (element == null) return;
 
+      string message = "";
+      if (dto.Nombre == element.Nombre && dto.Clave == element.Clave) message = "El nombre y clave ya están en uso";
+      else if (dto.Nombre == element.Nombre) message = $"El nombre '{dto.Nombre}' ya está en uso,";
+      else if (dto.Clave == element.Clave) message = $"La clave '{dto.Clave}' ya está en uso.";
+
+      throw new HttpException(409, message);
+
+
+    }
   }
 }

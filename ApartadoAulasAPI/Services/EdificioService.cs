@@ -37,7 +37,7 @@ namespace ApartadoAulasAPI.Services
     public async Task<Edificio> Update(UpdateEdificioDto EdificioDto)
     {
       var edificio = await _repository.GetByIdAsync(EdificioDto.Id);
-      if (edificio == null) throw new HttpsException(404, "No existe el edificio a actualizar");
+      if (edificio == null) throw new HttpException(404, "No existe el edificio a actualizar");
 
       Validate(EdificioDto);
       edificio = _mapper.Map<UpdateEdificioDto, Edificio>(EdificioDto,edificio);
@@ -49,13 +49,13 @@ namespace ApartadoAulasAPI.Services
     public void Validate(CreateEdificioDto dto)
     {
       var results = _repository.SearchElementsAsync(e => e.Nombre == dto.Nombre);
-      if (results.Count() > 0) throw new HttpsException(409, "Ya existe un edificio con este nombre");
+      if (results.Count() > 0) throw new HttpException(409, "Ya existe un edificio con este nombre");
     }
 
     public void Validate(UpdateEdificioDto dto)
     {
       var results = _repository.SearchElementsAsync(e => e.Nombre == dto.Nombre && e.Id != dto.Id);
-      if (results.Count() > 0) throw new HttpsException(409, "Ya existe un edificio con este nombre");
+      if (results.Count() > 0) throw new HttpException(409, "Ya existe un edificio con este nombre");
     }
   }
 }
