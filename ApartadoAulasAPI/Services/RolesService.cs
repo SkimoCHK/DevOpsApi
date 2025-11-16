@@ -42,7 +42,7 @@ namespace ApartadoAulasAPI.Services
     {
       Validate(roleUpdateDto);
       var role = await _rolesRepository.GetByIdAsync(roleUpdateDto.Id);
-      if (role == null) return null;
+      if (role == null) throw new HttpException(404,"Rol a actualizar no encontado.");
 
       role = _mapper.Map<UpdateRoleDto, Roles>(roleUpdateDto, role);
       _rolesRepository.UpdateAsync(role);
@@ -55,7 +55,7 @@ namespace ApartadoAulasAPI.Services
     public void Validate(CreateRoleDto dto)
     {
       var element = _rolesRepository.SearchElementsAsync(r => r.Nombre == dto.Nombre || r.Clave == dto.Clave).FirstOrDefault();
-      if (element == null) return;
+      if (element == null) return; 
 
       string message = "";
       if (dto.Nombre == element.Nombre && dto.Clave == element.Clave) message = "El nombre y clave ya están en uso";
