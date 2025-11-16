@@ -42,7 +42,7 @@ namespace ApartadoAulasAPI.Services
     {
       Validate(roleUpdateDto);
       var role = await _rolesRepository.GetByIdAsync(roleUpdateDto.Id);
-      if (role == null) throw new HttpException(404,"Rol a actualizar no encontado.");
+      if (role == null) throw new HttpException(404,"Rol a actualizar no encontrado.");
 
       role = _mapper.Map<UpdateRoleDto, Roles>(roleUpdateDto, role);
       _rolesRepository.UpdateAsync(role);
