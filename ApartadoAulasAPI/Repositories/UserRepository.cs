@@ -32,7 +32,8 @@ namespace ApartadoAulasAPI.Repositories
 
     public IEnumerable<Usuario> SearchElementsAsync(Func<Usuario, bool> filter)
     {
-      throw new NotImplementedException();
+      var elements = _context.Usuario.AsNoTracking().ToList().Where(filter);
+      return elements; 
     }
 
 

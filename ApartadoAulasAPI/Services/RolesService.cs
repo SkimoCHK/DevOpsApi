@@ -13,7 +13,6 @@ namespace ApartadoAulasAPI.Services
     private IMapper _mapper;
     public List<string> Errors { get; }
 
-
     public RolesService(IRepository<Roles> rolesRepository, IMapper mapper)
     {
       _rolesRepository = rolesRepository;
@@ -21,13 +20,11 @@ namespace ApartadoAulasAPI.Services
       Errors = new List<string>();
     }
 
-
     public async Task<IEnumerable<Roles>> Get()
       => await _rolesRepository.GetAllAsync();
 
     public async Task<Roles> GetById(int id)
       => await _rolesRepository.GetByIdAsync(id);
-
 
     public async Task<Roles> Add(CreateRoleDto roleInsertDto)
     {

@@ -1,27 +1,22 @@
-﻿using ApartadoAulasAPI.Models;
+﻿using ApartadoAulasAPI.DTOs.Aula;
+using ApartadoAulasAPI.Interfaces;
+using ApartadoAulasAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApartadoAulasAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AulaController : ControllerBase
-    {
-        public AulaController() { }
+  [Route("api/[controller]")]
+  [ApiController]
+  public class AulaController : ControllerBase
+  {
+    private readonly ICommonService<Aula, CreateAulaDto, UpdateAulaDto> _service;
+    public AulaController(ICommonService<Aula, CreateAulaDto, UpdateAulaDto> service)
+      => _service = service;
 
-        [HttpGet]
-        public IActionResult GetAulas()
-        {
-            var aulas = new List<Aula>
-        {
-          new Aula{Id=1, Nombre = "Laboratorio 1101", CapacidadEstudiantes = 30, Estatus = true},
-          new Aula{Id=2, Nombre = "Laboratorip 1103", CapacidadEstudiantes= 15, Estatus= true},
-          new Aula{Id=3, Nombre = "Lab. Cisco", CapacidadEstudiantes=25, Estatus = true},
-          new Aula{Id=4, Nombre = "Lab. Microsoft", CapacidadEstudiantes=25, Estatus = true},
-        };
+    [HttpGet]
+    public async Task<IActionResult> GetAulas()
+      => Ok(await _service.Get());
 
-            return Ok(aulas);
-        }
-    }
+  }
 }

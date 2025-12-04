@@ -1,4 +1,5 @@
 using ApartadoAulasAPI.AutoMappers;
+using ApartadoAulasAPI.DTOs.Aula;
 using ApartadoAulasAPI.DTOs.Edificio;
 using ApartadoAulasAPI.DTOs.Roles;
 using ApartadoAulasAPI.DTOs.Usuario;
@@ -36,10 +37,12 @@ namespace ApartadoAulasAPI
       builder.Services.AddScoped<IRepository<Roles>, RolesRepository>();
       builder.Services.AddScoped<IRepository<Usuario>, UserRepository>();
       builder.Services.AddScoped<IRepository<Edificio>, EdificioRepository>();
+      builder.Services.AddScoped<IRepository<Aula>, AulaRepository>();
 
       builder.Services.AddScoped<ICommonService<Roles, CreateRoleDto, UpdateRoleDto>, RolesService>();
       builder.Services.AddScoped<ICommonService<Usuario, CreateUserDto, UpdateUserDto>, UsuarioService>();
       builder.Services.AddScoped<ICommonService<Edificio, CreateEdificioDto, UpdateEdificioDto>, EdificioService>();
+      builder.Services.AddScoped<ICommonService<Aula, CreateAulaDto, UpdateAulaDto>, AulaService>();
 
       builder.Services.AddControllers();
 
