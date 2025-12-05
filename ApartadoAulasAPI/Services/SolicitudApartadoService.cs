@@ -61,11 +61,8 @@ namespace ApartadoAulasAPI.Services
     }
 
 
-    public Task<IEnumerable<SolicitudApartado>> Get()
-    {
-      throw new NotImplementedException();
-    }
-
+    public async Task<IEnumerable<SolicitudApartado>> Get()
+      => await _repository.GetAllAsync();
     public Task<SolicitudApartado> GetById(int id)
     {
       throw new NotImplementedException();

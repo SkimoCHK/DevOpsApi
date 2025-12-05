@@ -19,6 +19,9 @@ namespace ApartadoAulasAPI.Controllers
       var solicitud = await _service.Add(entity);
       return Created(nameof(CreateSolicitud), solicitud);
     }
+    [HttpGet("GetReservas")]
+    public async Task<IActionResult> GetReservas()
+      => Ok(await _service.Get());
 
   }
 }
