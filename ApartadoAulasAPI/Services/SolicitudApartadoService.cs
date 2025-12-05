@@ -32,11 +32,8 @@ namespace ApartadoAulasAPI.Services
       var nuevaUtcInicio = TimeZoneInfo.ConvertTimeToUtc(nuevaLocalInicio, sonora);
       var nuevaUtcFin = TimeZoneInfo.ConvertTimeToUtc(nuevaLocalFin, sonora);
 
-      var reservas =  _repository.SearchElementsAsync(r =>
-          r.AulaId == solicitud.AulaId &&
-          r.Fecha == solicitud.Fecha &&
-          r.Estado == "Confirmada"
-      );
+      // Usar el método async que ya filtra en la base de datos
+      var reservas = await _repository.GetReservasPorAulaYFecha(solicitud.AulaId, solicitud.Fecha);
 
       foreach (var r in reservas)
       {
@@ -55,7 +52,17 @@ namespace ApartadoAulasAPI.Services
       solicitud.FechaSolicitud = DateTime.UtcNow;
 
       await _repository.CreateAsync(solicitud);
-      await _repository.SaveAsync();
+
+      try
+      {
+        await _repository.SaveAsync();
+      }
+      catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+      {
+        // Devuelve la inner exception para depurar (no mantener en producción)
+        var detalle = ex.InnerException?.Message ?? ex.Message;
+        throw new HttpException(500, $"Error al guardar la reserva: {detalle}");
+      }
 
       return solicitud;
     }
