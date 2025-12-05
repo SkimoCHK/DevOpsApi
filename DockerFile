@@ -6,9 +6,10 @@ EXPOSE 8080
 # Imagen para build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["ApartadoAulasAPI.csproj", "./"]
-RUN dotnet restore "ApartadoAulasAPI.csproj"
+COPY ["ApartadoAulasAPI/ApartadoAulasAPI.csproj", "ApartadoAulasAPI/"]
+RUN dotnet restore "ApartadoAulasAPI/ApartadoAulasAPI.csproj"
 COPY . .
+WORKDIR "/src/ApartadoAulasAPI"
 RUN dotnet build "ApartadoAulasAPI.csproj" -c Release -o /app/build
 
 # Publicar la aplicación
@@ -22,13 +23,15 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ApartadoAulasAPI.dll"]
 ```
 
-**.dockerignore** (en la raíz):
+### 2. Crear .dockerignore en la raíz
+
+Crea un archivo `.dockerignore` **en el mismo lugar**:
 ```
-bin/
-obj/
-.vs/
-.vscode/
-*.user
-*.suo
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+**/*.suo
 .git/
 .gitignore
