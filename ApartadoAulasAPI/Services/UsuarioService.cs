@@ -38,6 +38,7 @@ namespace ApartadoAulasAPI.Services
 
     public async Task<Usuario> Update(UpdateUserDto UserDto)
     {
+
       var user = await _service.GetByIdAsync(UserDto.Id);
       if (user == null) return null;
 
