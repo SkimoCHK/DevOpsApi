@@ -44,13 +44,14 @@ namespace ApartadoAulasAPI.Services
       //Confirmamos que la contraseña realmente haya cambiado
       //Si devuelve true significa que la nueva contraseña no coincide con el hash en la base de datos
       //Por ende significa que se actualizo la password
-      if(!BC.EnhancedVerify(UserDto.Password, user.Password))
+      if (!BC.EnhancedVerify(UserDto.Password, user.Password))
       {
         //Si esta si cambio, generamos un nuevo hash
         UserDto.Password = BC.EnhancedHashPassword(UserDto.Password);
       }
-
+      UserDto.Password = user.Password;
       user = _mapper.Map<UpdateUserDto, Usuario>(UserDto, user);
+
       _service.UpdateAsync(user);
       await _service.SaveAsync();
       return user;

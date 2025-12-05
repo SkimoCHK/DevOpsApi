@@ -23,22 +23,30 @@ namespace ApartadoAulasAPI
     {
       var builder = WebApplication.CreateBuilder(args);
 
+      // NUEVO: Configurar para escuchar en el puerto 8080
+      builder.WebHost.ConfigureKestrel(serverOptions =>
+      {
+        serverOptions.ListenAnyIP(8080);
+      });
+
+      // NUEVO: Agregar variables de entorno
+      builder.Configuration.AddEnvironmentVariables();
+
       // Add services to the container.
-      var connectionString = builder.Configuration.GetConnectionString("PostgreConnection");
+      // MODIFICADO: Usar DefaultConnection en lugar de PostgreConnection
+      var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                             ?? builder.Configuration.GetConnectionString("PostgreConnection");
+
       builder.Services.AddDbContext<AppDbContext>(o =>
       {
         o.UseNpgsql(connectionString);
       });
 
       //Validators
-
-
-
       builder.Services.AddScoped<IRepository<Roles>, RolesRepository>();
       builder.Services.AddScoped<IRepository<Usuario>, UserRepository>();
       builder.Services.AddScoped<IRepository<Edificio>, EdificioRepository>();
       builder.Services.AddScoped<IRepository<Aula>, AulaRepository>();
-
       builder.Services.AddScoped<ICommonService<Roles, CreateRoleDto, UpdateRoleDto>, RolesService>();
       builder.Services.AddScoped<ICommonService<Usuario, CreateUserDto, UpdateUserDto>, UsuarioService>();
       builder.Services.AddScoped<ICommonService<Edificio, CreateEdificioDto, UpdateEdificioDto>, EdificioService>();
@@ -47,13 +55,7 @@ namespace ApartadoAulasAPI
       builder.Services.AddScoped<SolicitudApartadoRepository>();
       builder.Services.AddScoped<SolicitudApartadoService>();
       builder.Services.AddScoped<AuthService>();
-
       builder.Services.AddControllers();
-
-      //builder.Services.AddControllers()
-      //  .AddFluentValidation();
-
-      //builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
       // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
       builder.Services.AddEndpointsApiExplorer();
@@ -73,16 +75,16 @@ namespace ApartadoAulasAPI
 
       // Register AutoMapper before building the app
       builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
       var app = builder.Build();
 
       // Configure the HTTP request pipeline.
-      if (app.Environment.IsDevelopment())
-      {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-      }
+      // MODIFICADO: Mostrar Swagger también en producción (opcional)
+      app.UseSwagger();
+      app.UseSwaggerUI();
 
       app.UseMiddleware<ExceptionHandlingMiddleware>();
+
       //Test middleware in program
       app.Use(async (context, next) =>
       {
@@ -90,12 +92,13 @@ namespace ApartadoAulasAPI
         await next(context);
         Console.WriteLine("Fin del M2");
       });
-      app.UseHttpsRedirection();
+
+      // MODIFICADO: Comentar HTTPS redirect para Render (ellos manejan SSL)
+      // app.UseHttpsRedirection();
+
       app.UseCors("PermitirTodo");
       app.UseAuthorization();
-
       app.MapControllers();
-
       app.Run();
     }
   }
