@@ -43,6 +43,9 @@ namespace ApartadoAulasAPI
       builder.Services.AddScoped<ICommonService<Usuario, CreateUserDto, UpdateUserDto>, UsuarioService>();
       builder.Services.AddScoped<ICommonService<Edificio, CreateEdificioDto, UpdateEdificioDto>, EdificioService>();
       builder.Services.AddScoped<ICommonService<Aula, CreateAulaDto, UpdateAulaDto>, AulaService>();
+      builder.Services.AddScoped<AulaRepository>();
+      builder.Services.AddScoped<SolicitudApartadoRepository>();
+      builder.Services.AddScoped<SolicitudApartadoService>();
 
       builder.Services.AddControllers();
 
