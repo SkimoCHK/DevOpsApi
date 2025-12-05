@@ -22,6 +22,16 @@ namespace ApartadoAulasAPI.Repositories
       throw new NotImplementedException();
     }
 
+    public async Task<List<SolicitudApartado>> GetReservasPorAulaYFecha(int aulaId, DateOnly fecha)
+    {
+      return await _context.SolicitudApartados
+          .Where(s => s.AulaId == aulaId
+              && s.Fecha == fecha
+              && s.Estado.ToLower() == "confirmada")
+          .AsNoTracking()
+          .ToListAsync();
+    }
+
     public async Task SaveAsync()
       => await _context.SaveChangesAsync();
 

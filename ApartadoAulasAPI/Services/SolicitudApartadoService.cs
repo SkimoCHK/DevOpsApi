@@ -60,6 +60,40 @@ namespace ApartadoAulasAPI.Services
       return solicitud;
     }
 
+    public async Task<List<DisponibilidadHoraDto>> GetDisponibilidad(int aulaId, DateOnly fecha)
+    {
+      var reservas = await _repository.GetReservasPorAulaYFecha(aulaId, fecha);
+
+      var disponibilidad = new List<DisponibilidadHoraDto>();
+
+      // Horario escolar: 7:30 - 15:30
+      TimeOnly inicioDia = new(7, 30);
+      TimeOnly finDia = new(15, 30);
+
+      TimeOnly actual = inicioDia;
+
+      while (actual < finDia)
+      {
+        TimeOnly siguiente = actual.AddHours(1);
+
+        // Detectar si el intervalo se solapa con alguna reserva confirmada.
+        bool ocupado = reservas.Any(r =>
+            actual < r.HoraFin && siguiente > r.HoraInicio
+        );
+
+        disponibilidad.Add(new DisponibilidadHoraDto
+        {
+          HoraInicio = actual,
+          HoraFin = siguiente,
+          Disponible = !ocupado
+        });
+
+        actual = siguiente;
+      }
+
+      return disponibilidad;
+    }
+
 
     public async Task<IEnumerable<SolicitudApartado>> Get()
       => await _repository.GetAllAsync();
