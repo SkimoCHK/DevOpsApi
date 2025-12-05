@@ -4,6 +4,8 @@ using ApartadoAulasAPI.Interfaces;
 using ApartadoAulasAPI.Models;
 using ApartadoAulasAPI.Repositories;
 using AutoMapper;
+using System;
+using System.Runtime.InteropServices;
 
 namespace ApartadoAulasAPI.Services
 {
@@ -18,26 +20,46 @@ namespace ApartadoAulasAPI.Services
     }
     public List<string> Errors => throw new NotImplementedException();
 
-    public async Task<SolicitudApartado> Add(CreateSolicitudApartadoDto CreateEntityDto)
+    public async Task<SolicitudApartado> Add(CreateSolicitudApartadoDto dto)
     {
-      var solicitud = _mapper.Map<SolicitudApartado>(CreateEntityDto);
+      var solicitud = _mapper.Map<SolicitudApartado>(dto);
 
-      var solicitudes = await _repository.GetAllAsync();
+      var sonora = GetSonoraTimeZone();
 
-      foreach (var s in solicitudes){
-        if (s.Estado != "Finalizada" || s.AulaId != solicitud.AulaId) continue;
+      var nuevaLocalInicio = solicitud.Fecha.ToDateTime(solicitud.HoraInicio);
+      var nuevaLocalFin = solicitud.Fecha.ToDateTime(solicitud.HoraFin);
 
-        if (solicitud.Fecha == s.Fecha && (solicitud.HoraInicio == s.HoraInicio || solicitud.HoraInicio < s.HoraFin)) 
-          throw new HttpException(409,"Ya existe una reserva con esa fecha");
-      
+      var nuevaUtcInicio = TimeZoneInfo.ConvertTimeToUtc(nuevaLocalInicio, sonora);
+      var nuevaUtcFin = TimeZoneInfo.ConvertTimeToUtc(nuevaLocalFin, sonora);
+
+      var reservas =  _repository.SearchElementsAsync(r =>
+          r.AulaId == solicitud.AulaId &&
+          r.Fecha == solicitud.Fecha &&
+          r.Estado == "Confirmada"
+      );
+
+      foreach (var r in reservas)
+      {
+        var existenteLocalInicio = r.Fecha.ToDateTime(r.HoraInicio);
+        var existenteLocalFin = r.Fecha.ToDateTime(r.HoraFin);
+
+        var existenteUtcInicio = TimeZoneInfo.ConvertTimeToUtc(existenteLocalInicio, sonora);
+        var existenteUtcFin = TimeZoneInfo.ConvertTimeToUtc(existenteLocalFin, sonora);
+
+        bool hayConflicto = nuevaUtcInicio < existenteUtcFin && nuevaUtcFin > existenteUtcInicio;
+        if (hayConflicto)
+          throw new HttpException(409, "Ya existe una reserva en ese horario.");
       }
 
-      solicitud.Estado = "Aprobada";
-      solicitud.FechaSolicitud = DateTime.Now.ToUniversalTime();
+      solicitud.Estado = "Confirmada";
+      solicitud.FechaSolicitud = DateTime.UtcNow;
+
       await _repository.CreateAsync(solicitud);
       await _repository.SaveAsync();
+
       return solicitud;
     }
+
 
     public Task<IEnumerable<SolicitudApartado>> Get()
     {
@@ -62,6 +84,26 @@ namespace ApartadoAulasAPI.Services
     public void Validate(UpdatedSolicitudApartadoDto dto)
     {
       throw new NotImplementedException();
+    }
+
+    private static TimeZoneInfo GetSonoraTimeZone()
+    {
+      // Windows: "US Mountain Standard Time" (Sonora no aplica DST)
+      // Linux/macOS: "America/Hermosillo"
+      string windowsId = "US Mountain Standard Time";
+      string ianaId = "America/Hermosillo";
+      try
+      {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+          return TimeZoneInfo.FindSystemTimeZoneById(windowsId);
+        else
+          return TimeZoneInfo.FindSystemTimeZoneById(ianaId);
+      }
+      catch
+      {
+        // Fallback a UTC si no se encuentra la zona
+        return TimeZoneInfo.Utc;
+      }
     }
   }
 }

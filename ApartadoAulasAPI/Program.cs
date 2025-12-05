@@ -46,6 +46,7 @@ namespace ApartadoAulasAPI
       builder.Services.AddScoped<AulaRepository>();
       builder.Services.AddScoped<SolicitudApartadoRepository>();
       builder.Services.AddScoped<SolicitudApartadoService>();
+      builder.Services.AddScoped<AuthService>();
 
       builder.Services.AddControllers();
 
