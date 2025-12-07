@@ -72,6 +72,8 @@ jobs:
     name: Deploy to Somee (FTP)
     runs-on: ubuntu-latest
     needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: secrets
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -84,7 +86,9 @@ jobs:
       - name: Upload to Somee via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          server: ${{ secrets.SOMEE_FTP_HOST }}
-          username: ${{ secrets.SOMEE_FTP_USER }}
-          password: ${{ secrets.SOMEE_FTP_PASS }}
+          server: ${{ secrets.SOMEE_FTP_SERVER }}
+          username: ${{ secrets.SOMEE_FTP_USERNAME }}
+          password: ${{ secrets.SOMEE_FTP_PASSWORD }}
           local-dir: ./published/
+          server-dir: ./
+          log-level: verbose
