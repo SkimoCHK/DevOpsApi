@@ -2,13 +2,11 @@
 using ApartadoAulasAPI.Interfaces;
 using ApartadoAulasAPI.Models;
 using ApartadoAulasAPI.Services;
+using ApartadoAulasAPI.Exceptions;
 using AutoMapper;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace ApartadoAulasAPI.Tests
 {
@@ -78,11 +76,12 @@ namespace ApartadoAulasAPI.Tests
     }
 
     [Fact]
-    public async Task Update_ShouldReturnNull_WhenRoleNotFound()
+    public async Task Update_WhenRoleNotFound_ShouldThrowHttpException()
     {
       // Arrange
       var repoMock = new Mock<IRepository<Roles>>();
-      repoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Roles)null);
+      // Devolver explícitamente Roles? null para evitar warnings de nulabilidad
+      repoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Roles?)null);
       var mapperMock = new Mock<IMapper>();
 
       var service = new RolesService(repoMock.Object, mapperMock.Object);
@@ -93,11 +92,9 @@ namespace ApartadoAulasAPI.Tests
         Descripcion = "MissingRole"
       };
 
-      // Act
-      var result = await service.Update(dto);
+      // Act & Assert: la implementación actual lanza HttpException cuando no encuentra el rol
+      await Assert.ThrowsAsync<HttpException>(async () => await service.Update(dto));
 
-      // Assert
-      Assert.Null(result);
       repoMock.Verify(r => r.UpdateAsync(It.IsAny<Roles>()), Times.Never);
       repoMock.Verify(r => r.SaveAsync(), Times.Never);
     }
