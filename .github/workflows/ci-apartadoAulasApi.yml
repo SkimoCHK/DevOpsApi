@@ -1,5 +1,4 @@
 name: CI/CD - ApartadoAulasAPI
-
 on:
   push:
     branches:
@@ -7,7 +6,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   # ===============================
   # JOB 1: BUILD & LINT
@@ -15,29 +13,22 @@ jobs:
   build:
     name: Build and Lint (.NET)
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-
       - name: Restore dependencies
         run: dotnet restore
-
       - name: Code analysis (dotnet format)
         run: |
           dotnet tool install -g dotnet-format
           export PATH="$PATH:/home/runner/.dotnet/tools"
           dotnet format --verify-no-changes || echo "Advertencias de formato detectadas."
-
       - name: Build solution
         run: dotnet build --no-restore --configuration Release
-
-
   # ===============================
   # JOB 2: TEST
   # ===============================
@@ -45,25 +36,20 @@ jobs:
     name: Run Tests (.NET)
     runs-on: ubuntu-latest
     needs: build
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-
       - name: Restore dependencies
         run: dotnet restore
-
       - name: Run tests
         run: |
           dotnet test --verbosity normal --configuration Release \
             --logger "trx;LogFileName=test_results.trx" \
             --results-directory ./TestResults
-
       - name: Show test results summary
         if: always()
         run: |
@@ -73,15 +59,12 @@ jobs:
           dotnet test --list-tests | wc -l | xargs echo "Total de pruebas detectadas:"
           ls ./TestResults || echo "No se encontraron resultados de prueba."
           echo "---------------------------------------"
-
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: TestResults
           path: ./TestResults
-
-
   # ===============================
   # JOB 3: DEPLOY TO SOMEE (FTP)
   # ===============================
@@ -89,24 +72,19 @@ jobs:
     name: Deploy to Somee (FTP)
     runs-on: ubuntu-latest
     needs: test
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-
       - name: Publish .NET app
         run: dotnet publish -c Release -o published
-
       - name: Upload to Somee via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.SOMEE_FTP_HOST }}
           username: ${{ secrets.SOMEE_FTP_USER }}
           password: ${{ secrets.SOMEE_FTP_PASS }}
-          local-dir: published
-          dangerous-clean-slate: false
+          local-dir: ./published/
