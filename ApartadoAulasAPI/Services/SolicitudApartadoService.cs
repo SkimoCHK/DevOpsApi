@@ -20,6 +20,12 @@ namespace ApartadoAulasAPI.Services
     }
     public List<string> Errors => throw new NotImplementedException();
 
+    public IEnumerable<SolicitudApartado> GetHistorialReservas(int idUser)
+    {
+      var reservas = _repository.SearchElementsAsync(r => r.UsuarioId == idUser);
+      return reservas;
+    }
+
     public async Task<SolicitudApartado> Add(CreateSolicitudApartadoDto dto)
     {
       var solicitud = _mapper.Map<SolicitudApartado>(dto);

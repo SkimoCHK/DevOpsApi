@@ -2,6 +2,7 @@
 using ApartadoAulasAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ApartadoAulasAPI.Controllers
 {
@@ -29,6 +30,13 @@ namespace ApartadoAulasAPI.Controllers
     {
       var result = await _service.GetDisponibilidad(aulaId, fecha);
       return Ok(result);
+    }
+
+    [HttpGet("GetHistorialReservas")]
+    public async Task<IActionResult> GetReservas(int userId)
+    {
+      var reservas = _service.GetHistorialReservas(userId);
+      return Ok(reservas);
     }
 
   }
