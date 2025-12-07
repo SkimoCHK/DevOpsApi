@@ -1,6 +1,5 @@
-name: CI - ApartadoAulasAPI
+name: CI/CD - ApartadoAulasAPI
 
-# El pipeline se ejecuta automáticamente cuando se hace push o pull request a la rama main.
 on:
   push:
     branches:
@@ -18,33 +17,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Clona el repositorio desde GitHub para tener acceso al código fuente.
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Instala el SDK de .NET (9.0 en este caso)
-      #    para compilar y ejecutar el proyecto con la versión correcta.
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
 
-      # 3. Restaura las dependencias necesarias definidas en los archivos .csproj.
       - name: Restore dependencies
         run: dotnet restore
 
-      # 4. Análisis estático de código (Linter)
-      #    Se utiliza dotnet format para verificar el estilo del código.
       - name: Code analysis (dotnet format)
         run: |
           dotnet tool install -g dotnet-format
           export PATH="$PATH:/home/runner/.dotnet/tools"
           dotnet format --verify-no-changes || echo "Advertencias de formato detectadas."
 
-      # 5. Compilación (Build)
-      #    Se compila la solución garantizando que no existan errores de sintaxis o dependencias rotas.
       - name: Build solution
         run: dotnet build --no-restore --configuration Release
+
 
   # ===============================
   # JOB 2: TEST
@@ -52,8 +44,6 @@ jobs:
   test:
     name: Run Tests (.NET)
     runs-on: ubuntu-latest
-
-    # Este job depende del éxito del job de compilación.
     needs: build
 
     steps:
@@ -68,8 +58,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      # Pruebas automatizadas
-      # Aquí se ejecutan las pruebas unitarias e integrales para validar la calidad del código.
       - name: Run tests
         run: |
           dotnet test --verbosity normal --configuration Release \
@@ -92,3 +80,35 @@ jobs:
         with:
           name: TestResults
           path: ./TestResults
+
+
+  # ===============================
+  # JOB 3: DEPLOY TO SOMEE (FTP)
+  # ===============================
+  deploy:
+    name: Deploy to Somee (FTP)
+    runs-on: ubuntu-latest
+    needs: test   # Solo si TODO pasó correctamente
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      # Publicar el proyecto
+      - name: Publish .NET app
+        run: dotnet publish -c Release -o published
+
+      # Enviar por FTP a Somee
+      - name: Upload to Somee via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.SOMEE_FTP_HOST }}
+          username: ${{ secrets.SOMEE_FTP_USER }}
+          password: ${{ secrets.SOMEE_FTP_PASS }}
+          local-dir: published
+          dangerous-clean-slate: false
