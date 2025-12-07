@@ -90,5 +90,7 @@ jobs:
           username: ${{ secrets.SOMEE_FTP_USERNAME }}
           password: ${{ secrets.SOMEE_FTP_PASSWORD }}
           local-dir: ./published/
-          server-dir: ./
+          server-dir: /www.ReservasApi.somee.com/
+          protocol: ftp
+          port: 21
           log-level: verbose
