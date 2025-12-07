@@ -19,5 +19,13 @@ namespace ApartadoAulasAPI.Controllers
       var loginResponse = _service.Login(loginDto);
       return Ok(loginResponse);
     }
+
+    [HttpGet("GetInfoUser")]
+    public IActionResult GetInfoUser(int id)
+    {
+      var info = _service.GetInfoUser(id);
+      return Ok(info);
+    }
+
   }
 }

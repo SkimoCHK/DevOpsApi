@@ -36,7 +36,7 @@ namespace ApartadoAulasAPI.Repositories
       => await _context.SaveChangesAsync();
 
     public IEnumerable<SolicitudApartado> SearchElementsAsync(Func<SolicitudApartado, bool> filter)
-      => _context.SolicitudApartados.Where(filter).ToList();
+      => _context.SolicitudApartados.Include(s => s.Aula).Where(filter).ToList();
 
     public void UpdateAsync(SolicitudApartado entity)
     {

@@ -35,7 +35,7 @@ namespace ApartadoAulasAPI.Services
       return info;
     }
 
-    private LoginResponse GetInfoUser(int idUser)
+    public LoginResponse GetInfoUser(int idUser)
     {
       var sonoraZone = GetSonoraTimeZone();
       var nowUtc = DateTime.UtcNow;
@@ -63,7 +63,7 @@ namespace ApartadoAulasAPI.Services
           }
           return new { Reserva = s, UtcInstant = utcInstant };
         })
-        .Where(x => x.UtcInstant >= nowUtc)   
+        .Where(x => x.UtcInstant >= nowUtc)
         .OrderBy(x => x.UtcInstant)
         .Take(2)
         .Select(x => x.Reserva)
