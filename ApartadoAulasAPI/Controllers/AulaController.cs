@@ -18,5 +18,8 @@ namespace ApartadoAulasAPI.Controllers
     public async Task<IActionResult> GetAulas()
       => Ok(await _service.Get());
 
+        [HttpGet("GetMessage")]
+        public IActionResult GetMessage()
+            => Ok(new { Message = "Que onda como estan" });
   }
 }
