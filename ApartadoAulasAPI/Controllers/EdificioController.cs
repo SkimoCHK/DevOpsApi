@@ -18,7 +18,7 @@ namespace ApartadoAulasAPI.Controllers
     [HttpGet]
     public IActionResult GetMessage()
     {
-      return Ok(new { mensaje = "Hola mundo!" });
+      return Ok(new { mensaje = "Hola mundo!!" });
     }
 
 
