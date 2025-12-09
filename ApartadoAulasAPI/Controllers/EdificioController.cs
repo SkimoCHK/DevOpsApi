@@ -16,6 +16,13 @@ namespace ApartadoAulasAPI.Controllers
       => _service = service;
 
     [HttpGet]
+    public IActionResult GetMessage()
+    {
+      return Ok(new { mensaje = "Hola mundo!" });
+    }
+
+
+    [HttpGet]
     public async Task<IActionResult> GetEdificios()
       => Ok(await _service.Get());
 
