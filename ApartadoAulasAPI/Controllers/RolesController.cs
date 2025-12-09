@@ -15,7 +15,7 @@ namespace ApartadoAulasAPI.Controllers
         public RolesController(ICommonService<Roles, CreateRoleDto, UpdateRoleDto> service) => _service = service;
 
 
-        [HttpGet]
+        [HttpGet("GetRoles")]
         public async Task<IActionResult> GetAll()
         {
             var roles = await _service.Get();
