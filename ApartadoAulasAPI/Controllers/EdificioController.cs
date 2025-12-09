@@ -15,7 +15,7 @@ namespace ApartadoAulasAPI.Controllers
     public EdificioController(ICommonService<Edificio, CreateEdificioDto, UpdateEdificioDto> service)
       => _service = service;
 
-    [HttpGet]
+    [HttpGet("GetMessage")]
     public IActionResult GetMessage()
     {
       return Ok(new { mensaje = "Hola mundo!!" });
